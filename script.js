@@ -38,20 +38,16 @@ const defaultData = {
     }
 };
 
-let siteData = null;
-
 async function loadData() {
-    if (siteData) return siteData;
     try {
-        const res = await fetch('data.json?' + Date.now());
+        const res = await fetch('data.json?v=' + Date.now());
         if (res.ok) {
-            siteData = await res.json();
-            return siteData;
+            return await res.json();
         }
     } catch (e) {}
+
     const saved = localStorage.getItem('siteData');
-    siteData = saved ? JSON.parse(saved) : { ...defaultData };
-    return siteData;
+    return saved ? JSON.parse(saved) : { ...defaultData };
 }
 
 // ===== Render Content =====
@@ -426,8 +422,8 @@ function initTilt() {
 }
 
 // ===== Initialize =====
-document.addEventListener('DOMContentLoaded', () => {
-    renderContent();
+document.addEventListener('DOMContentLoaded', async () => {
+    await renderContent();
     initBgLetters();
     initLoader();
     initCursor();
@@ -445,7 +441,6 @@ document.addEventListener('DOMContentLoaded', () => {
 // Listen for storage changes (real-time sync with admin)
 window.addEventListener('storage', (e) => {
     if (e.key === 'siteData') {
-        siteData = null;
         renderContent();
     }
 });
