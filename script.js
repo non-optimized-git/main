@@ -173,11 +173,10 @@ async function renderContent() {
 // ===== Loader =====
 function initLoader() {
     const loader = document.getElementById('loader');
-    window.addEventListener('load', () => {
-        setTimeout(() => {
-            loader.classList.add('hidden');
-        }, 1500);
-    });
+    if (!loader) return;
+    setTimeout(() => {
+        loader.classList.add('hidden');
+    }, 1500);
 }
 
 // ===== Custom Cursor =====
