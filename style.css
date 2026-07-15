@@ -166,7 +166,8 @@ a {
     transition: width 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.nav-links a:hover::after {
+.nav-links a:hover::after,
+.nav-links a.active::after {
     width: 100%;
 }
 
@@ -231,7 +232,8 @@ a {
     transition: color 0.3s;
 }
 
-.mobile-menu-links a:hover {
+.mobile-menu-links a:hover,
+.mobile-menu-links a.active {
     color: var(--gray);
 }
 

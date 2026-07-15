@@ -237,26 +237,29 @@ function initNavScroll() {
     const nav = document.getElementById('nav');
     if (!nav) return;
 
-    let lastScroll = 0;
+    // Always visible — no hide on scroll
+    nav.style.opacity = '1';
+    nav.style.pointerEvents = 'auto';
 
-    window.addEventListener('scroll', () => {
-        const currentScroll = window.pageYOffset;
+    // Highlight active section link
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-links a[href^="#"], .mobile-menu-links a[href^="#"]');
 
-        if (currentScroll > 100) {
-            nav.style.opacity = '0';
-            nav.style.pointerEvents = 'none';
-        } else {
-            nav.style.opacity = '1';
-            nav.style.pointerEvents = 'auto';
-        }
-
-        if (currentScroll < lastScroll) {
-            nav.style.opacity = '1';
-            nav.style.pointerEvents = 'auto';
-        }
-
-        lastScroll = currentScroll;
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const id = entry.target.getAttribute('id');
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === `#${id}`);
+                });
+            }
+        });
+    }, {
+        threshold: 0.3,
+        rootMargin: '-20% 0px -60% 0px'
     });
+
+    sections.forEach(section => observer.observe(section));
 }
 
 // ===== Magnetic Effect for Links =====
