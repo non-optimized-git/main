@@ -282,6 +282,38 @@ function initMagnetic() {
     });
 }
 
+// ===== Hero Background Letters =====
+function initBgLetters() {
+    const container = document.getElementById('heroBgLetters');
+    if (!container) return;
+
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const count = 15;
+
+    for (let i = 0; i < count; i++) {
+        const span = document.createElement('span');
+        span.className = 'hero-bg-letter';
+        span.textContent = chars[Math.floor(Math.random() * chars.length)];
+
+        const size = 80 + Math.random() * 200;
+        const left = Math.random() * 100;
+        const duration = 15 + Math.random() * 20;
+        const delay = Math.random() * duration;
+        const blur = 2 + Math.random() * 6;
+
+        span.style.cssText = `
+            left: ${left}%;
+            bottom: -10%;
+            font-size: ${size}px;
+            filter: blur(${blur}px);
+            animation-duration: ${duration}s;
+            animation-delay: -${delay}s;
+        `;
+
+        container.appendChild(span);
+    }
+}
+
 // ===== Text Split Animation =====
 function initTextSplit() {
     document.querySelectorAll('[data-animate="text"]').forEach(el => {
@@ -385,6 +417,7 @@ function initTilt() {
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', () => {
     renderContent();
+    initBgLetters();
     initLoader();
     initCursor();
     initMobileMenu();
