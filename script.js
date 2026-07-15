@@ -38,21 +38,53 @@ const defaultData = {
     }
 };
 
+function debugLog(msg) {
+    const el = document.getElementById('debugPanel');
+    if (el) el.textContent += msg + '\n';
+    console.log(msg);
+}
+
 async function loadData() {
+    debugLog('[1] loadData() called');
+    debugLog('[1] page URL: ' + window.location.href);
+
     try {
-        const res = await fetch('data.json?v=' + Date.now());
+        const url = 'data.json?v=' + Date.now();
+        debugLog('[2] fetching: ' + url);
+        const res = await fetch(url);
+        debugLog('[2] response status: ' + res.status + ' ' + res.statusText);
         if (res.ok) {
-            return await res.json();
+            const text = await res.text();
+            debugLog('[2] response length: ' + text.length + ' chars');
+            debugLog('[2] first 200 chars: ' + text.substring(0, 200));
+            try {
+                const data = JSON.parse(text);
+                debugLog('[3] JSON parsed OK, hero.name=' + data.hero.name);
+                return data;
+            } catch (parseErr) {
+                debugLog('[3] JSON parse error: ' + parseErr.message);
+            }
+        } else {
+            debugLog('[2] fetch not OK, falling back');
         }
-    } catch (e) {}
+    } catch (e) {
+        debugLog('[2] fetch exception: ' + e.message);
+    }
 
     const saved = localStorage.getItem('siteData');
-    return saved ? JSON.parse(saved) : { ...defaultData };
+    if (saved) {
+        debugLog('[4] using localStorage fallback');
+        return JSON.parse(saved);
+    }
+    debugLog('[4] using defaultData');
+    return { ...defaultData };
 }
 
 // ===== Render Content =====
 async function renderContent() {
+    debugLog('[5] renderContent() start');
     const data = await loadData();
+    debugLog('[5] rendering with hero.name=' + data.hero.name);
 
     // Hero
     const heroName = document.getElementById('heroName');
@@ -423,7 +455,9 @@ function initTilt() {
 
 // ===== Initialize =====
 document.addEventListener('DOMContentLoaded', async () => {
+    debugLog('[0] DOMContentLoaded');
     await renderContent();
+    debugLog('[6] all done');
     initBgLetters();
     initLoader();
     initCursor();
