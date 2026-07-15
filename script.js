@@ -38,14 +38,25 @@ const defaultData = {
     }
 };
 
-function loadData() {
+let siteData = null;
+
+async function loadData() {
+    if (siteData) return siteData;
+    try {
+        const res = await fetch('data.json?' + Date.now());
+        if (res.ok) {
+            siteData = await res.json();
+            return siteData;
+        }
+    } catch (e) {}
     const saved = localStorage.getItem('siteData');
-    return saved ? JSON.parse(saved) : { ...defaultData };
+    siteData = saved ? JSON.parse(saved) : { ...defaultData };
+    return siteData;
 }
 
 // ===== Render Content =====
-function renderContent() {
-    const data = loadData();
+async function renderContent() {
+    const data = await loadData();
 
     // Hero
     const heroName = document.getElementById('heroName');
@@ -434,6 +445,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Listen for storage changes (real-time sync with admin)
 window.addEventListener('storage', (e) => {
     if (e.key === 'siteData') {
+        siteData = null;
         renderContent();
     }
 });

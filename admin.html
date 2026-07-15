@@ -391,10 +391,10 @@
     <header class="admin-header">
         <h1><span>ADMIN</span> PANEL</h1>
         <div class="header-actions">
-            <button class="btn btn-secondary" onclick="exportData()">导出数据</button>
+            <button class="btn btn-primary" onclick="deployData()">保存并导出 data.json</button>
             <button class="btn btn-secondary" onclick="importData()">导入数据</button>
             <button class="btn btn-danger" onclick="resetData()">重置默认</button>
-            <a href="index.html" class="btn btn-primary" target="_blank">预览网站</a>
+            <a href="index.html" class="btn btn-secondary" target="_blank">预览网站</a>
         </div>
     </header>
 
@@ -788,17 +788,18 @@
             });
         });
 
-        // Export data
-        function exportData() {
-            const data = loadData();
+        // Deploy: save to localStorage and export data.json
+        function deployData() {
+            const data = collectFormData();
+            saveData(data);
             const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'site-data.json';
+            a.download = 'data.json';
             a.click();
             URL.revokeObjectURL(url);
-            showToast('数据已导出');
+            showToast('已导出 data.json，请替换项目中的文件后重新部署');
         }
 
         // Import data

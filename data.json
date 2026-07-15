@@ -1,0 +1,69 @@
+{
+  "hero": {
+    "name": "Non-Optimized",
+    "tagline": "Researcher and Storyteller",
+    "subtitle": "Researh as a story"
+  },
+  "about": {
+    "text": "热爱技术与设计的交汇点，专注于创造兼具美感与功能性的数字体验。相信极简主义的力量，用最少的元素传达最深的意义。",
+    "stats": [
+      {
+        "number": "3+",
+        "label": "年经验"
+      },
+      {
+        "number": "10+",
+        "label": "完成项目"
+      },
+      {
+        "number": "5+",
+        "label": "技术栈"
+      }
+    ]
+  },
+  "skills": [
+    {
+      "title": "前端",
+      "items": "React, Vue.js, TypeScript"
+    },
+    {
+      "title": "后端",
+      "items": "Node.js, Python, PostgreSQL"
+    },
+    {
+      "title": "工具",
+      "items": "Git, Docker, AWS"
+    }
+  ],
+  "projects": [
+    {
+      "name": "项目一",
+      "desc": "简洁优雅的Web应用",
+      "tech": "React, Node.js",
+      "link": "#"
+    },
+    {
+      "name": "项目二",
+      "desc": "数据可视化平台",
+      "tech": "Vue.js, D3.js",
+      "link": "#"
+    },
+    {
+      "name": "项目三",
+      "desc": "移动端优先的应用",
+      "tech": "React Native",
+      "link": "#"
+    }
+  ],
+  "contact": {
+    "email": "liyuanyi158@gmail.com",
+    "phone": "",
+    "address": ""
+  },
+  "social": {
+    "github": "https://github.com/yourusername",
+    "linkedin": "",
+    "twitter": "",
+    "wechat": ""
+  }
+}
