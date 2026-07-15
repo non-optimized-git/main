@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理 - 个人网站</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #1a1a1a;
+            --bg: #ffffff;
+            --bg-card: #f8f8f8;
+            --border: #e0e0e0;
+            --text: #0a0a0a;
+            --text-muted: #666;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .admin-header h1 {
+            font-size: 1.2rem;
+            font-weight: 500;
+            letter-spacing: 0.1em;
+        }
+
+        .admin-header h1 span {
+            color: var(--primary);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 0.6rem 1.2rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s;
+            letter-spacing: 0.05em;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: var(--bg);
+        }
+
+        .btn-primary:hover {
+            background: #333;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-danger {
+            background: transparent;
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #e74c3c;
+            color: white;
+        }
+
+        .admin-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+        }
+
+        .sidebar {
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .nav-menu {
+            list-style: none;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .nav-menu li {
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-menu li:last-child {
+            border-bottom: none;
+        }
+
+        .nav-menu a {
+            display: block;
+            padding: 1rem 1.5rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            background: var(--bg);
+            color: var(--primary);
+            border-left: 2px solid var(--primary);
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .section-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 2rem;
+        }
+
+        .section-card h2 {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border);
+            letter-spacing: 0.05em;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.9rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(26, 26, 26, 0.1);
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .list-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .list-item {
+            display: flex;
+            gap: 1rem;
+            align-items: start;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            flex-wrap: wrap;
+        }
+
+        .list-item .form-group {
+            flex: 1;
+            margin-bottom: 0;
+            min-width: 200px;
+        }
+
+        .list-item .btn-remove {
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.2rem;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .list-item .btn-remove:hover {
+            opacity: 1;
+        }
+
+        .image-upload {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .image-upload .preview {
+            width: 80px;
+            height: 60px;
+            background: var(--bg-card);
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+
+        .image-upload .preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .image-upload input[type="file"] {
+            display: none;
+        }
+
+        .image-upload .btn-upload {
+            padding: 0.4rem 0.8rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.3s;
+        }
+
+        .image-upload .btn-upload:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-add {
+            padding: 0.8rem;
+            background: transparent;
+            border: 1px dashed var(--border);
+            border-radius: 4px;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-add:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-add:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .preview-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        .preview-link:hover {
+            text-decoration: underline;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary);
+            color: var(--bg);
+            padding: 1rem 2rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        @media (max-width: 768px) {
+            .admin-container {
+                grid-template-columns: 1fr;
+            }
+
+            .sidebar {
+                position: static;
+            }
+
+            .nav-menu {
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .nav-menu li {
+                border-bottom: none;
+                border-right: 1px solid var(--border);
+            }
+
+            .nav-menu a {
+                white-space: nowrap;
+                padding: 0.8rem 1.2rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .list-item {
+                flex-direction: column;
+            }
+
+            .list-item .form-group {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="admin-header">
+        <h1><span>ADMIN</span> PANEL</h1>
+        <div class="header-actions">
+            <button class="btn btn-secondary" onclick="exportData()">导出数据</button>
+            <button class="btn btn-secondary" onclick="importData()">导入数据</button>
+            <button class="btn btn-danger" onclick="resetData()">重置默认</button>
+            <a href="index.html" class="btn btn-primary" target="_blank">预览网站</a>
+        </div>
+    </header>
+
+    <div class="admin-container">
+        <aside class="sidebar">
+            <ul class="nav-menu">
+                <li><a href="#hero" class="active">首页横幅</a></li>
+                <li><a href="#about">关于我</a></li>
+                <li><a href="#skills">技能</a></li>
+                <li><a href="#projects">项目</a></li>
+                <li><a href="#contact">联系方式</a></li>
+                <li><a href="#social">社交媒体</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section id="hero" class="section-card">
+                <h2>首页横幅</h2>
+                <div class="form-group">
+                    <label>姓名</label>
+                    <input type="text" id="heroName" placeholder="你的名字">
+                </div>
+                <div class="form-group">
+                    <label>标语 / 职位</label>
+                    <input type="text" id="heroTagline" placeholder="一句话介绍">
+                </div>
+                <div class="form-group">
+                    <label>副标题</label>
+                    <input type="text" id="heroSubtitle" placeholder="补充说明">
+                </div>
+            </section>
+
+            <!-- About Section -->
+            <section id="about" class="section-card">
+                <h2>关于我</h2>
+                <div class="form-group">
+                    <label>个人简介</label>
+                    <textarea id="aboutText" rows="4" placeholder="介绍一下你自己"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>统计数据 1 - 数字</label>
+                        <input type="text" id="stat1Number" placeholder="3+">
+                    </div>
+                    <div class="form-group">
+                        <label>统计数据 1 - 标签</label>
+                        <input type="text" id="stat1Label" placeholder="年经验">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>统计数据 2 - 数字</label>
+                        <input type="text" id="stat2Number" placeholder="10+">
+                    </div>
+                    <div class="form-group">
+                        <label>统计数据 2 - 标签</label>
+                        <input type="text" id="stat2Label" placeholder="完成项目">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>统计数据 3 - 数字</label>
+                        <input type="text" id="stat3Number" placeholder="5+">
+                    </div>
+                    <div class="form-group">
+                        <label>统计数据 3 - 标签</label>
+                        <input type="text" id="stat3Label" placeholder="技术栈">
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skills Section -->
+            <section id="skills" class="section-card">
+                <h2>技能</h2>
+                <div id="skillsList" class="list-editor">
+                    <!-- Dynamic content -->
+                </div>
+                <button class="btn-add" onclick="addSkill()">+ 添加技能分类</button>
+            </section>
+
+            <!-- Projects Section -->
+            <section id="projects" class="section-card">
+                <h2>项目</h2>
+                <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.85rem;">
+                    提示：点击"选择图片"上传项目截图，建议尺寸 800x600 像素
+                </p>
+                <div id="projectsList" class="list-editor">
+                    <!-- Dynamic content -->
+                </div>
+                <button class="btn-add" onclick="addProject()">+ 添加项目</button>
+            </section>
+
+            <!-- Contact Section -->
+            <section id="contact" class="section-card">
+                <h2>联系方式</h2>
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="contactEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>电话（可选）</label>
+                    <input type="tel" id="contactPhone" placeholder="+86 ...">
+                </div>
+                <div class="form-group">
+                    <label>地址（可选）</label>
+                    <input type="text" id="contactAddress" placeholder="城市">
+                </div>
+            </section>
+
+            <!-- Social Section -->
+            <section id="social" class="section-card">
+                <h2>社交媒体</h2>
+                <div class="form-group">
+                    <label>GitHub 链接</label>
+                    <input type="url" id="socialGithub" placeholder="https://github.com/...">
+                </div>
+                <div class="form-group">
+                    <label>LinkedIn 链接</label>
+                    <input type="url" id="socialLinkedin" placeholder="https://linkedin.com/in/...">
+                </div>
+                <div class="form-group">
+                    <label>Twitter / X 链接</label>
+                    <input type="url" id="socialTwitter" placeholder="https://x.com/...">
+                </div>
+                <div class="form-group">
+                    <label>微信（可选）</label>
+                    <input type="text" id="socialWechat" placeholder="微信号">
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <div class="toast" id="toast">保存成功</div>
+
+    <script>
+        // Default data
+        const defaultData = {
+            hero: {
+                name: "Yuanyi Li",
+                tagline: "Creative Developer",
+                subtitle: "用代码创造美学体验"
+            },
+            about: {
+                text: "热爱技术与设计的交汇点，专注于创造兼具美感与功能性的数字体验。相信极简主义的力量，用最少的元素传达最深的意义。",
+                stats: [
+                    { number: "3+", label: "年经验" },
+                    { number: "10+", label: "完成项目" },
+                    { number: "5+", label: "技术栈" }
+                ]
+            },
+            skills: [
+                { title: "前端", items: "React, Vue.js, TypeScript" },
+                { title: "后端", items: "Node.js, Python, PostgreSQL" },
+                { title: "工具", items: "Git, Docker, AWS" }
+            ],
+            projects: [
+                { name: "项目一", desc: "简洁优雅的Web应用", tech: "React, Node.js", link: "#" },
+                { name: "项目二", desc: "数据可视化平台", tech: "Vue.js, D3.js", link: "#" },
+                { name: "项目三", desc: "移动端优先的应用", tech: "React Native", link: "#" }
+            ],
+            contact: {
+                email: "your-email@example.com",
+                phone: "",
+                address: ""
+            },
+            social: {
+                github: "https://github.com/yourusername",
+                linkedin: "",
+                twitter: "",
+                wechat: ""
+            }
+        };
+
+        // Load data from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('siteData');
+            return saved ? JSON.parse(saved) : { ...defaultData };
+        }
+
+        // Save data to localStorage
+        function saveData(data) {
+            localStorage.setItem('siteData', JSON.stringify(data));
+            showToast('保存成功');
+        }
+
+        // Show toast notification
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 2000);
+        }
+
+        // Populate form with data
+        function populateForm(data) {
+            // Hero
+            document.getElementById('heroName').value = data.hero.name;
+            document.getElementById('heroTagline').value = data.hero.tagline;
+            document.getElementById('heroSubtitle').value = data.hero.subtitle;
+
+            // About
+            document.getElementById('aboutText').value = data.about.text;
+            document.getElementById('stat1Number').value = data.about.stats[0].number;
+            document.getElementById('stat1Label').value = data.about.stats[0].label;
+            document.getElementById('stat2Number').value = data.about.stats[1].number;
+            document.getElementById('stat2Label').value = data.about.stats[1].label;
+            document.getElementById('stat3Number').value = data.about.stats[2].number;
+            document.getElementById('stat3Label').value = data.about.stats[2].label;
+
+            // Contact
+            document.getElementById('contactEmail').value = data.contact.email;
+            document.getElementById('contactPhone').value = data.contact.phone;
+            document.getElementById('contactAddress').value = data.contact.address;
+
+            // Social
+            document.getElementById('socialGithub').value = data.social.github;
+            document.getElementById('socialLinkedin').value = data.social.linkedin;
+            document.getElementById('socialTwitter').value = data.social.twitter;
+            document.getElementById('socialWechat').value = data.social.wechat;
+
+            // Skills
+            renderSkills(data.skills);
+
+            // Projects
+            renderProjects(data.projects);
+        }
+
+        // Render skills list
+        function renderSkills(skills) {
+            const container = document.getElementById('skillsList');
+            container.innerHTML = skills.map((skill, i) => `
+                <div class="list-item">
+                    <div class="form-group">
+                        <label>分类名称</label>
+                        <input type="text" value="${skill.title}" onchange="updateSkill(${i}, 'title', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>技能列表（逗号分隔）</label>
+                        <input type="text" value="${skill.items}" onchange="updateSkill(${i}, 'items', this.value)">
+                    </div>
+                    <button class="btn-remove" onclick="removeSkill(${i})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        // Render projects list
+        function renderProjects(projects) {
+            const container = document.getElementById('projectsList');
+            container.innerHTML = projects.map((project, i) => `
+                <div class="list-item">
+                    <div class="form-group">
+                        <label>项目名称</label>
+                        <input type="text" value="${project.name}" onchange="updateProject(${i}, 'name', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>项目描述（两句话）</label>
+                        <textarea rows="2" onchange="updateProject(${i}, 'desc', this.value)">${project.desc}</textarea>
+                    </div>
+                    <div class="form-group">
+                        <label>技术栈（逗号分隔）</label>
+                        <input type="text" value="${project.tech}" onchange="updateProject(${i}, 'tech', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>链接</label>
+                        <input type="url" value="${project.link}" onchange="updateProject(${i}, 'link', this.value)">
+                    </div>
+                    <div class="form-group">
+                        <label>项目截图</label>
+                        <div class="image-upload">
+                            <div class="preview" id="preview-${i}">
+                                ${project.image ? `<img src="${project.image}" alt="预览">` : '无图片'}
+                            </div>
+                            <button class="btn-upload" onclick="document.getElementById('file-${i}').click()">选择图片</button>
+                            <input type="file" id="file-${i}" accept="image/*" onchange="handleImageUpload(${i}, this)">
+                            ${project.image ? `<button class="btn-upload" onclick="removeImage(${i})">删除图片</button>` : ''}
+                        </div>
+                    </div>
+                    <button class="btn-remove" onclick="removeProject(${i})">&times;</button>
+                </div>
+            `).join('');
+        }
+
+        // Handle image upload
+        function handleImageUpload(index, input) {
+            const file = input.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const data = loadData();
+                data.projects[index].image = e.target.result;
+                saveData(data);
+                renderProjects(data.projects);
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Remove image
+        function removeImage(index) {
+            const data = loadData();
+            data.projects[index].image = '';
+            saveData(data);
+            renderProjects(data.projects);
+        }
+
+        // Update skill
+        function updateSkill(index, field, value) {
+            const data = loadData();
+            data.skills[index][field] = value;
+            saveData(data);
+        }
+
+        // Add skill
+        function addSkill() {
+            const data = loadData();
+            data.skills.push({ title: "新分类", items: "技能1, 技能2" });
+            saveData(data);
+            renderSkills(data.skills);
+        }
+
+        // Remove skill
+        function removeSkill(index) {
+            const data = loadData();
+            data.skills.splice(index, 1);
+            saveData(data);
+            renderSkills(data.skills);
+        }
+
+        // Update project
+        function updateProject(index, field, value) {
+            const data = loadData();
+            data.projects[index][field] = value;
+            saveData(data);
+        }
+
+        // Add project
+        function addProject() {
+            const data = loadData();
+            data.projects.push({ name: "新项目", desc: "项目描述", tech: "技术栈", link: "#" });
+            saveData(data);
+            renderProjects(data.projects);
+        }
+
+        // Remove project
+        function removeProject(index) {
+            const data = loadData();
+            data.projects.splice(index, 1);
+            saveData(data);
+            renderProjects(data.projects);
+        }
+
+        // Collect all form data
+        function collectFormData() {
+            const data = {
+                hero: {
+                    name: document.getElementById('heroName').value,
+                    tagline: document.getElementById('heroTagline').value,
+                    subtitle: document.getElementById('heroSubtitle').value
+                },
+                about: {
+                    text: document.getElementById('aboutText').value,
+                    stats: [
+                        { number: document.getElementById('stat1Number').value, label: document.getElementById('stat1Label').value },
+                        { number: document.getElementById('stat2Number').value, label: document.getElementById('stat2Label').value },
+                        { number: document.getElementById('stat3Number').value, label: document.getElementById('stat3Label').value }
+                    ]
+                },
+                skills: loadData().skills,
+                projects: loadData().projects,
+                contact: {
+                    email: document.getElementById('contactEmail').value,
+                    phone: document.getElementById('contactPhone').value,
+                    address: document.getElementById('contactAddress').value
+                },
+                social: {
+                    github: document.getElementById('socialGithub').value,
+                    linkedin: document.getElementById('socialLinkedin').value,
+                    twitter: document.getElementById('socialTwitter').value,
+                    wechat: document.getElementById('socialWechat').value
+                }
+            };
+            return data;
+        }
+
+        // Auto-save on input change
+        document.querySelectorAll('input, textarea').forEach(input => {
+            input.addEventListener('change', () => {
+                const data = collectFormData();
+                saveData(data);
+            });
+        });
+
+        // Export data
+        function exportData() {
+            const data = loadData();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'site-data.json';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('数据已导出');
+        }
+
+        // Import data
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            input.onchange = (e) => {
+                const file = e.target.files[0];
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        saveData(data);
+                        populateForm(data);
+                        showToast('数据已导入');
+                    } catch (err) {
+                        showToast('导入失败：文件格式错误');
+                    }
+                };
+                reader.readAsText(file);
+            };
+            input.click();
+        }
+
+        // Reset data
+        function resetData() {
+            if (confirm('确定要重置所有数据为默认值吗？')) {
+                saveData(defaultData);
+                populateForm(defaultData);
+                showToast('已重置为默认值');
+            }
+        }
+
+        // Smooth scroll for nav links
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector(link.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+                document.querySelectorAll('.nav-menu a').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+            });
+        });
+
+        // Initialize
+        const data = loadData();
+        populateForm(data);
+    </script>
+</body>
+</html>

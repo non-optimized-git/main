@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yuanyi Li - Creative Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-line"></div>
+            <span class="loader-text">LOADING</span>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor" id="cursor"></div>
+    <div class="cursor-follower" id="cursorFollower"></div>
+
+    <!-- Navigation -->
+    <nav class="nav" id="nav">
+        <a href="#" class="nav-logo" data-cursor="link">YL</a>
+        <div class="nav-links">
+            <a href="#about" data-cursor="link">关于</a>
+            <a href="#work" data-cursor="link">作品</a>
+            <a href="#contact" data-cursor="link">联系</a>
+        </div>
+        <button class="nav-menu-btn" id="menuBtn" data-cursor="link">
+            <span></span>
+            <span></span>
+        </button>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div class="mobile-menu" id="mobileMenu">
+        <div class="mobile-menu-links">
+            <a href="#about" data-cursor="link">关于</a>
+            <a href="#work" data-cursor="link">作品</a>
+            <a href="#contact" data-cursor="link">联系</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="hero">
+        <div class="hero-content">
+            <div class="hero-text">
+                <h1 class="hero-title" data-animate="text">
+                    <span class="hero-title-line" id="heroName">Yuanyi Li</span>
+                </h1>
+                <p class="hero-tagline" id="heroTagline" data-animate="fade">Creative Developer</p>
+            </div>
+            <div class="hero-subtitle" id="heroSubtitle" data-animate="fade">
+                用代码创造美学体验
+            </div>
+        </div>
+        <div class="hero-scroll" data-animate="fade">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="section about" id="about">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" data-animate="fade">01</span>
+                <h2 class="section-title" data-animate="text">关于我</h2>
+            </div>
+            <div class="about-content">
+                <div class="about-text" data-animate="slide">
+                    <p id="aboutText">热爱技术与设计的交汇点，专注于创造兼具美感与功能性的数字体验。相信极简主义的力量，用最少的元素传达最深的意义。</p>
+                </div>
+                <div class="about-stats" id="aboutStats" data-animate="fade">
+                    <!-- Dynamic stats -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="section skills" id="skills">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" data-animate="fade">02</span>
+                <h2 class="section-title" data-animate="text">专业技能</h2>
+            </div>
+            <div class="skills-grid" id="skillsGrid">
+                <!-- Dynamic skills -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="section projects" id="work">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" data-animate="fade">03</span>
+                <h2 class="section-title" data-animate="text">精选作品</h2>
+            </div>
+            <div class="projects-list" id="projectsList">
+                <!-- Dynamic projects -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="section contact" id="contact">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-number" data-animate="fade">04</span>
+                <h2 class="section-title" data-animate="text">联系方式</h2>
+            </div>
+            <div class="contact-content">
+                <div class="contact-info" data-animate="slide">
+                    <p>有想法？让我们一起创造</p>
+                    <a href="mailto:" class="contact-email" id="contactEmail" data-cursor="link">your-email@example.com</a>
+                </div>
+                <div class="contact-social" id="contactSocial" data-animate="fade">
+                    <!-- Dynamic social links -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <span>&copy; 2026 Yuanyi Li</span>
+                <span>极简 · 美学 · 代码</span>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
